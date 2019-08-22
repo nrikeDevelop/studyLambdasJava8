@@ -1,4 +1,4 @@
-package session4.exercicise37.Mapping;
+package session4.exercicise38.StreamParalelo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,24 +37,34 @@ public class Main {
 	/**
 	 * @param args
 	 */
+	
+	private static String convertir(String nombre) {
+		String retName ="";
+		try {
+			Thread.sleep(1000);
+			retName = nombre.toUpperCase();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return retName;
+		
+	}
+	
 	public static void main(String[] args) {
 		setUpUsers();
-		//MAPPING MAPEA EL STREAM EN DIFERENTES MAP LISTS 
+		//PARALLELSTREAM SE ENCARGA DE DIVIDIR LAS ACCIONES EN STREAMS PARA FACILITAR LOS TIEMPOS
+		System.out.println("\nStrema");
+		long startTime = System.currentTimeMillis();
+		rooms.stream().forEach(e->System.out.println("Nombre : "+convertir(e.getName())));
+		long stopTime = System.currentTimeMillis();
+		System.out.println(stopTime-startTime+" milisegundos empleados");
 		
-		Map<Character,List<Room>> grupoAlfabetico = rooms.stream()
-				.collect(Collectors.groupingBy(e->new Character(e.getName().charAt(0))));
-		
-		System.out.println("Orden Alfabetico");
-		grupoAlfabetico.get('I').stream().forEach(e->System.out.println(e.getName()));
-		grupoAlfabetico.get('C').stream().forEach(e->System.out.println(e.getName()));
-
-		
-		Map<String,List<Room>> grupoType = rooms.stream()
-				.collect(Collectors.groupingByConcurrent(room->room.getName()));
-		
-		System.out.println("String tipo");
-		grupoType.get("Informatica").stream().forEach(e->System.out.println("Tipo Informatica"+e.getCapacity()));
-		grupoType.get("Cocinas").stream().forEach(e->System.out.println("Tipo Cocina"+e.getCapacity()));
+		System.out.println("\nParallelStream");
+		startTime = System.currentTimeMillis();
+		rooms.parallelStream().forEach(e->System.out.println("Nombre : "+convertir(e.getName())));
+		stopTime = System.currentTimeMillis();
+		System.out.println(stopTime-startTime+" misidegundos empleados");
 
 
 
